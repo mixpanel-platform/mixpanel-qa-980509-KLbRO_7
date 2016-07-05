@@ -124,9 +124,9 @@
       
       var features = MP.api.propertyValues('featureinvoked', 'featureid', {limit: 1000}).done(function(r){
         debugger
-        options = []
+        var options = {items: []}
         _.each(r.json, function(v,k){
-          options.push({value:v, label: v})
+          options.items.push({value:v, label: v})
         })
         rootFeatureSelect.MPSelect(options);
       })
