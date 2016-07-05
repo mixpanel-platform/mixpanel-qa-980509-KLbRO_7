@@ -200,7 +200,7 @@
                 val._children = true ;
                 debugger
                 // Need to get jql obj
-                nodeQuery(objs, val);
+                nodeQuery(val);
               }
           });
   
@@ -286,7 +286,6 @@
       }
       
       $('#run').on('click', function(e){
-        debugger
         var rootFeature = rootFeatureSelect.val()
         var dates = datesSelector.MPDatepicker('value')
         var params = {
@@ -315,7 +314,6 @@
         var rootFeatureCount = MP.api.segment(eventName,rootParams);
         
         $.when(rootFeatureCount).done(function(eventCount){
-            debugger
             graphData.count = eventCount.sum().values()[eventName];
             addNode(graphData);
         });
