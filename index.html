@@ -121,7 +121,7 @@
       var rootFeatureSelect = $('#featureSelect')
       var eventName = 'featureinvoked'
       var propertyName = 'featureid'
-     
+      var dates = datesSelector.MPDatepicker('value')
       var params = {
           from: dates.from,
           to: dates.to,
@@ -293,7 +293,7 @@
       
       $('#run').on('click', function(e){
         var rootFeature = rootFeatureSelect.val()
-        var dates = datesSelector.MPDatepicker('value')
+        dates = datesSelector.MPDatepicker('value')
         params.from = dates.from
         params.to = dates.to
         
