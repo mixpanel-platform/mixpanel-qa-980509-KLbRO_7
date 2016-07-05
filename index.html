@@ -233,6 +233,7 @@
         /* Dict with top counts for each event */
         var nodes = {};
         var steps = [node.name];
+        var parent = node.parent;
         while (parent){
           steps.push(_.clone(parent.name));
           parent = parent.parent
