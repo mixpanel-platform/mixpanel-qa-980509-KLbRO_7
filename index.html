@@ -92,7 +92,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: 'featureinvoked'}]
+          event_selectors: [{event: params.event }]
         })
         .groupByUser(createState)
         .filter(user => !_.isEmpty(user.value.next))
@@ -119,10 +119,13 @@
       MP.api.MAX_SIMULTANEOUS_QUERIES = 30;
       var datesSelector = $('#dateSelect').MPDatepicker();
       var rootFeatureSelect = $('#featureSelect')
+      var event = 
+      ,
+      var prop = 'featureid'
       
       // Need Prop Values not Prop Keys
       
-      var features = MP.api.propertyValues('featureinvoked', 'featureid', {limit: 1000}).done(function(r){
+      var features = MP.api.propertyValues(event, prop, {limit: 1000}).done(function(r){
         var options = {items: []}
         _.each(r.json, function(v,k){
           options.items.push({value:v, label: v})
@@ -295,7 +298,8 @@
         var params = {
           from: dates.from,
           to: dates.to,
-          length: 5
+          length: 5,
+          event: event
         }
         
         /* This Event Represents the Origin of the User Flow Diagram. */
@@ -310,11 +314,11 @@
         var rootParams = {
           from: params.from,
           to: params.to,
-          where: '(properties["featureid"] == "FontFilterActivated")'
+          where: '(properties["' + prop + '"] == "' + rootFeature + '")'
         }
         
         /* Find the Root Event Count */
-        var rootFeatureCount = MP.api.segment('featureInvoked',rootParams);
+        var rootFeatureCount = MP.api.segment(event,rootParams);
         
         $.when(rootFeatureCount).done(function(eventCount){
             debugger
