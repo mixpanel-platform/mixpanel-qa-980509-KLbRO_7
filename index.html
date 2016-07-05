@@ -138,7 +138,7 @@
       
 
   
-      var width = 960;
+      var width = 800;
       var height = 750;
       var cluster = d3.layout.cluster()
         .size([height, width - 160]);
@@ -198,8 +198,6 @@
                 addNode(graphData);
               } else {
                 val._children = true ;
-                debugger
-                // Need to get jql obj
                 nodeQuery(val);
               }
           });
@@ -233,6 +231,7 @@
         // then reverse and hit jql
         var parent = node;
         var steps = [];
+        var name = node.name
         while (parent){
           steps.push(name);
           name = parent.name
