@@ -114,7 +114,7 @@
       }
     </script>
     <script>
-      var script = $('#jql').html()
+      var JQLscript = $('#jql').html()
       // redundant, jql is faster now
       MP.api.MAX_SIMULTANEOUS_QUERIES = 30;
       var datesSelector = $('#dateSelect').MPDatepicker();
@@ -224,37 +224,35 @@
   
       /* Let the Funnel Queries Begin... */
   
-      var nodeQuery = function(event_list, node){
+      var nodeQuery = function(node){
         // This needs mad cleaning, just make jql query
         /* Dict with top counts for each event */
         var nodes = {};
-        var promises = []
         debugger
-          
-        _.each(_.keys(event_list), function(key) {
-          var event = event_list[key];
-          var parent = node;
-          var selector_str;
-          var events = [];
-          while (parent){
-            events.push({'event': event});
-            event = parent.name
-            parent = parent.parent
-          }
-          events.push({'event': event});
-          events.reverse();
-          events.push(params);
-          promises.push(MP.api.funnel.apply(MP.api, events));
-        });
+        // add parents to feature list 
+        // then reverse and hit jql
+        var parent = node;
+        var steps = [];
+        while (parent){
+          steps.push(name);
+          name = parent.name
+          parent = parent.parent
+        }
+        steps.reverse();
+        debugger
+        MP.api.jql(JQLscript, params).done(
+        // });
 
-          Promise.all(promises).then(function(promiseArray){
-            _.each(promiseArray, function(data){
-                total = 0;
-                var length = data.length - 1;
-                _.each(_.values(data[length]), function(funnelObj){ total += funnelObj.count });
-                nodes[_.values(data[length])[0].event] = total;
-            });
-          }).then(function(){
+        //   Promise.all(promises).then(function(promiseArray){
+        //     _.each(promiseArray, function(data){
+        //         total = 0;
+        //         var length = data.length - 1;
+        //         _.each(_.values(data[length]), function(funnelObj){ total += funnelObj.count });
+        //         nodes[_.values(data[length])[0].event] = total;
+        //     });
+        //   }).then(
+        function(d){
+          debugger
              /* Add Data to Graph Data */
              var total = _.values(nodes).reduce(function(a , b){return a + b;});
   
