@@ -275,7 +275,7 @@
           });
       }
       
-      rootEventSelect.on('change', function(e){
+      rootFeatureSelect.on('change', function(e){
         $('#run').show();
       })
       
@@ -309,9 +309,9 @@
           where: '(properties["featureid"] == "FontFilterActivated")'
         }
         /* Find the Root Event Count */
-        var rootEventCount = MP.api.segment('featureInvoked',rootParams);
+        var rootFeatureCount = MP.api.segment('featureInvoked',rootParams);
         
-        $.when(rootEventCount).done(function(eventCount){
+        $.when(rootFeatureCount).done(function(eventCount){
             graphData.count = eventCount.sum().values()[rootEvent];
             addNode(graphData);
         });
