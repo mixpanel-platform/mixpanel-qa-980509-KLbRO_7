@@ -47,7 +47,73 @@
       <div id="dateSelect" style="float: right;"></div>
       <div style="clear: both;"></div>
       <button id="run" value="Run" style="display: none;">Run</button>
+    <script id="jql">
+    function top(dict) {
+      var stack = []
+      var res = {}
+      _.each(dict, function(v, k){
+        stack.push(k)
+        if (stack.length > params.length){
+          stack.sort(function(a, b){
+            return dict[b] - dict[a]
+          })
+          stack.pop()
+        }
+      })
+      _.each(stack, function(e){
+        res[e] = dict[e]
+      })
+      return res
+    }
+    function createState(state, events) {
+        state = state || {
+            step: 0,
+            next: {},
+        };
+      _.each(events, function(event) {
+        var feature = _.clone(event.properties.featureid)
+        if (feature == params.features[state.step]) {
+          state.step++
+        } else if (state.step >= params.features.length) {
+          if (params.unique) {
+            state.next[feature] = 1
+          } else {
+            state.next[feature] = state.next[feature] ++ || 1
+          }
+        } else {
+          state.step = 0
+        }
+      });
+      return state;
+    }
+
+function main() {
+  return Events({
+    from_date: params.from,
+    to_date:   params.to,
+    event_selectors: [{event: 'featureinvoked'}]
+  })
+  .groupByUser(createState)
+  .filter(user => !_.isEmpty(user.value.next))
+  .reduce(function(accums, users){
+    var res = {}
+    _.each(users, function(user){
+      _.each(user.value.next, function(v, k){
+        res[k] = res[k] + v || v
+      })
+    })
+    _.each(accums, function(accum){
+      _.each(accum, function(v, k){
+        res[k] = res[k] + v || v
+      })
+    })
+    return res
+  })
+  .map(top)
+}
+    </script>
     <script>
+    var script = $('.jql').html()
     debugger
       MP.api.MAX_SIMULTANEOUS_QUERIES = 30
       var datesSelector = $('#dateSelect').MPDatepicker();
