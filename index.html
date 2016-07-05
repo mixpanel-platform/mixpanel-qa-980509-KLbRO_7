@@ -242,32 +242,36 @@
         var JQLparams = _.extend({}, params, {features: steps})
         MP.api.jql(JQLscript, JQLparams).done(function(d) {
           var nodes = d[0]
-          /* Add Data to Graph Data */
-          var total = _.values(nodes).reduce(function(a , b){return a + b;});
-          _.each(nodes, function(val, key){
-            /*
-              Build a node object with the conversion percentage and other meta data and add it to the children
-              of the parent node
-            */
-            var conversion = Math.floor(val / node.count * 100);
-            var root = Math.floor(val / graphData.count * 100);
-            if (conversion < 2 ) { return };
-            if (node.children) {
-                node.children.push({
-                  'name': key,
-                  'root': root,
-                  'conversion': conversion,
-                  'count': val
-                });
-            } else {
-                node.children = [{
-                  'name':key,
-                  'root': root,
-                  'conversion': conversion,
-                  'count': val
-                }];
-            }
-        })
+          if (nodes.length === 0) {
+            alert('No new results')
+          } else {
+            /* Add Data to Graph Data */
+            var total = _.values(nodes).reduce(function(a , b){return a + b;});
+            _.each(nodes, function(val, key){
+              /*
+                Build a node object with the conversion percentage and other meta data and add it to the children
+                of the parent node
+              */
+              var conversion = Math.floor(val / node.count * 100);
+              var root = Math.floor(val / graphData.count * 100);
+              if (conversion < 2 ) { return };
+              if (node.children) {
+                  node.children.push({
+                    'name': key,
+                    'root': root,
+                    'conversion': conversion,
+                    'count': val
+                  });
+              } else {
+                  node.children = [{
+                    'name':key,
+                    'root': root,
+                    'conversion': conversion,
+                    'count': val
+                  }];
+              }
+          })
+        }
         addNode(graphData);
             console.log(graphData)
         });
