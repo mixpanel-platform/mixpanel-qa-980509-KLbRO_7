@@ -241,10 +241,10 @@
         steps.reverse();
         var JQLparams = _.extend({}, params, {features: steps})
         MP.api.jql(JQLscript, JQLparams).done(function(d) {
-          var nodes = d[0]
-          if (nodes.length === 0) {
+          if (d.length === 0) {
             alert('No new results')
           } else {
+            var nodes = d[0]
             /* Add Data to Graph Data */
             var total = _.values(nodes).reduce(function(a , b){return a + b;});
             _.each(nodes, function(val, key){
