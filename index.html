@@ -92,7 +92,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: params.eventName }]
+          event_selectors: [{ event: params.eventName }]
         })
         .groupByUser(createState)
         .filter(user => !_.isEmpty(user.value.next))
@@ -126,7 +126,7 @@
           from: dates.from,
           to: dates.to,
           length: 5,
-          event: eventName
+          eventName: eventName
         }
       
       // Need Prop Values not Prop Keys
