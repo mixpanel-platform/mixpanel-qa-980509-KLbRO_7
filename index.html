@@ -48,7 +48,7 @@
       <div style="clear: both;"></div>
       <button id="run" value="Run" style="display: none;">Run</button>
     <script id="jql">
-    function top(dict) {
+    function topSort(dict) {
       var stack = []
       var res = {}
       _.each(dict, function(v, k){
@@ -65,6 +65,7 @@
       })
       return res
     }
+    
     function createState(state, events) {
         state = state || {
             step: 0,
@@ -87,30 +88,30 @@
       return state;
     }
 
-function main() {
-  return Events({
-    from_date: params.from,
-    to_date:   params.to,
-    event_selectors: [{event: 'featureinvoked'}]
-  })
-  .groupByUser(createState)
-  .filter(user => !_.isEmpty(user.value.next))
-  .reduce(function(accums, users){
-    var res = {}
-    _.each(users, function(user){
-      _.each(user.value.next, function(v, k){
-        res[k] = res[k] + v || v
+    function main() {
+      return Events({
+        from_date: params.from,
+        to_date:   params.to,
+        event_selectors: [{event: 'featureinvoked'}]
       })
-    })
-    _.each(accums, function(accum){
-      _.each(accum, function(v, k){
-        res[k] = res[k] + v || v
+      .groupByUser(createState)
+      .filter(user => !_.isEmpty(user.value.next))
+      .reduce(function(accums, users){
+        var res = {}
+        _.each(users, function(user){
+          _.each(user.value.next, function(v, k){
+            res[k] = res[k] + v || v
+          })
+        })
+        _.each(accums, function(accum){
+          _.each(accum, function(v, k){
+            res[k] = res[k] + v || v
+          })
+        })
+        return res
       })
-    })
-    return res
-  })
-  .map(top)
-}
+      .map(topSort)
+    }
     </script>
     <script>
     var script = $('.jql').html()
