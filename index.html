@@ -236,7 +236,7 @@
         var steps = [];
         var name = node.name
         while (parent){
-          steps.push(name);
+          steps.push(_.clone(name));
           name = parent.name
           parent = parent.parent
         }
