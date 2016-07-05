@@ -121,6 +121,13 @@
       var rootFeatureSelect = $('#featureSelect')
       var eventName = 'featureinvoked'
       var propertyName = 'featureid'
+     
+      var params = {
+          from: dates.from,
+          to: dates.to,
+          length: 5,
+          event: eventName
+        }
       
       // Need Prop Values not Prop Keys
       
@@ -287,12 +294,8 @@
       $('#run').on('click', function(e){
         var rootFeature = rootFeatureSelect.val()
         var dates = datesSelector.MPDatepicker('value')
-        var params = {
-          from: dates.from,
-          to: dates.to,
-          length: 5,
-          event: eventName
-        }
+        params.from = dates.from
+        params.to = dates.to
         
         /* This Event Represents the Origin of the User Flow Diagram. */
         
