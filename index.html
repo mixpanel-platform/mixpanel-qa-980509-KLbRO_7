@@ -130,6 +130,7 @@
           options.items.push({value:v, label: v})
         })
         rootFeatureSelect.MPSelect(options);
+        $('#run').show();
       })
       var rootFeature;
       /* Global Event List */
@@ -155,7 +156,6 @@
         .attr("transform", "translate(40,0)");
   
       function addNode(data){
-  
         d3.selectAll(".text").remove();
         d3.selectAll(".node").remove();
         d3.selectAll(".link").remove();
@@ -287,10 +287,6 @@
           });
       }
       
-      rootFeatureSelect.on('change', function(e){
-        $('#run').show();
-      })
-      
       $('#run').on('click', function(e){
         debugger
         var rootFeature = rootFeatureSelect.val()
@@ -322,7 +318,7 @@
         
         $.when(rootFeatureCount).done(function(eventCount){
             debugger
-            graphData.count = eventCount.sum().values()[rootEvent];
+            graphData.count = eventCount.sum().values()[eventName];
             addNode(graphData);
         });
       });
