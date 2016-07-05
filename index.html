@@ -230,12 +230,8 @@
       /* Let the Funnel Queries Begin... */
   
       var nodeQuery = function(node){
-        // This needs mad cleaning, just make jql query
         /* Dict with top counts for each event */
         var nodes = {};
-        debugger
-        // add parents to feature list 
-        // then reverse and hit jql
         var parent = node;
         var steps = [];
         var name = node.name
@@ -245,9 +241,8 @@
           parent = parent.parent
         }
         steps.reverse();
-        debugger
-        MP.api.jql(JQLscript, params).done(
-        // });
+        var JQLparams = _.extend(params, {features: steps})
+          // });
 
         //   Promise.all(promises).then(function(promiseArray){
         //     _.each(promiseArray, function(data){
@@ -257,38 +252,38 @@
         //         nodes[_.values(data[length])[0].event] = total;
         //     });
         //   }).then(
-        function(d){
+        MP.api.jql(JQLscript, params).done(function(d) {
           debugger
-             /* Add Data to Graph Data */
-             var total = _.values(nodes).reduce(function(a , b){return a + b;});
-  
-             _.each(_.keys(nodes), function(key){
-               /*
-                  Build a node object with the conversion percentage and other meta data and add it to the children
-                  of the parent node
-               */
-                var conversion = Math.floor(nodes[key] / node.count * 100);
-                var root = Math.floor(nodes[key] / graphData.count * 100);
-                if (conversion < 2 ) { return };
-                if (node.children) {
-                    node.children.push({
-                      'name':key,
-                      'root': root,
-                      'conversion': conversion,
-                      'count':nodes[key]
-                    });
-                } else {
-                    node.children = [{
-                      'name':key,
-                      'root': root,
-                      'conversion': conversion,
-                      'count':nodes[key]
-                    }];
-                }
-             })
-             addNode(graphData);
+          /* Add Data to Graph Data */
+         var total = _.values(nodes).reduce(function(a , b){return a + b;});
+
+         _.each(_.keys(nodes), function(key){
+           /*
+              Build a node object with the conversion percentage and other meta data and add it to the children
+              of the parent node
+           */
+            var conversion = Math.floor(nodes[key] / node.count * 100);
+            var root = Math.floor(nodes[key] / graphData.count * 100);
+            if (conversion < 2 ) { return };
+            if (node.children) {
+                node.children.push({
+                  'name':key,
+                  'root': root,
+                  'conversion': conversion,
+                  'count':nodes[key]
+                });
+            } else {
+                node.children = [{
+                  'name':key,
+                  'root': root,
+                  'conversion': conversion,
+                  'count':nodes[key]
+                }];
+            }
+         })
+         addNode(graphData);
              console.log(graphData)
-          });
+        });
       }
       
       $('#run').on('click', function(e){
