@@ -115,11 +115,11 @@
     </script>
     <script>
     var script = $('#jql').html()
-    debugger
     // redundant, jql is faster now
       MP.api.MAX_SIMULTANEOUS_QUERIES = 30
       var datesSelector = $('#dateSelect').MPDatepicker();
-      var rootFeature = $('#featureSelect').MPPropertySelect('setEvent', 'featureinvoked');
+      var rootFeature = $('#featureSelect').MPPropertySelect()
+      rootFeature.MPPropertySelect('setEvent', 'featureinvoked');
       /* Global Event List */
       var graphData = {}
       
