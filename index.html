@@ -92,7 +92,7 @@
         return Events({
           from_date: params.from,
           to_date:   params.to,
-          event_selectors: [{event: params.event }]
+          event_selectors: [{event: params.eventName }]
         })
         .groupByUser(createState)
         .filter(user => !_.isEmpty(user.value.next))
@@ -119,12 +119,12 @@
       MP.api.MAX_SIMULTANEOUS_QUERIES = 30;
       var datesSelector = $('#dateSelect').MPDatepicker();
       var rootFeatureSelect = $('#featureSelect')
-      var event = 'featureinvoked'
-      var prop = 'featureid'
+      var eventName = 'featureinvoked'
+      var propertyName = 'featureid'
       
       // Need Prop Values not Prop Keys
       
-      var features = MP.api.propertyValues(event, prop, {limit: 1000}).done(function(r){
+      var features = MP.api.propertyValues(eventName, propertyName, {limit: 1000}).done(function(r){
         var options = {items: []}
         _.each(r.json, function(v,k){
           options.items.push({value:v, label: v})
@@ -292,13 +292,14 @@
       })
       
       $('#run').on('click', function(e){
+        debugger
         var rootFeature = rootFeatureSelect.val()
         var dates = datesSelector.MPDatepicker('value')
         var params = {
           from: dates.from,
           to: dates.to,
           length: 5,
-          event: event
+          event: eventName
         }
         
         /* This Event Represents the Origin of the User Flow Diagram. */
@@ -313,11 +314,11 @@
         var rootParams = {
           from: params.from,
           to: params.to,
-          where: '(properties["' + prop + '"] == "' + rootFeature + '")'
+          where: '(properties["' + propertyName + '"] == "' + rootFeature + '")'
         }
         
         /* Find the Root Event Count */
-        var rootFeatureCount = MP.api.segment(event,rootParams);
+        var rootFeatureCount = MP.api.segment(eventName,rootParams);
         
         $.when(rootFeatureCount).done(function(eventCount){
             debugger
