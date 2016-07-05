@@ -241,8 +241,8 @@
           parent = parent.parent
         }
         steps.reverse();
-        var JQLparams = _.extend(params, {features: steps})
-        MP.api.jql(JQLscript, params).done(function(d) {
+        var JQLparams = _.extend({}, params, {features: steps})
+        MP.api.jql(JQLscript, JQLParams).done(function(d) {
           var nodes = d[0]
           /* Add Data to Graph Data */
           var total = _.values(nodes).reduce(function(a , b){return a + b;});
