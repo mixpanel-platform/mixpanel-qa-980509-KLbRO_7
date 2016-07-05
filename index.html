@@ -242,26 +242,16 @@
         }
         steps.reverse();
         var JQLparams = _.extend(params, {features: steps})
-          // });
-
-        //   Promise.all(promises).then(function(promiseArray){
-        //     _.each(promiseArray, function(data){
-        //         total = 0;
-        //         var length = data.length - 1;
-        //         _.each(_.values(data[length]), function(funnelObj){ total += funnelObj.count });
-        //         nodes[_.values(data[length])[0].event] = total;
-        //     });
-        //   }).then(
         MP.api.jql(JQLscript, params).done(function(d) {
-          debugger
+          var nodes = d[0]
           /* Add Data to Graph Data */
-         var total = _.values(nodes).reduce(function(a , b){return a + b;});
+          var total = _.values(nodes).reduce(function(a , b){return a + b;});
 
-         _.each(_.keys(nodes), function(key){
-           /*
+          _.each(_.keys(nodes), function(key){
+            /*
               Build a node object with the conversion percentage and other meta data and add it to the children
               of the parent node
-           */
+            */
             var conversion = Math.floor(nodes[key] / node.count * 100);
             var root = Math.floor(nodes[key] / graphData.count * 100);
             if (conversion < 2 ) { return };
@@ -280,9 +270,9 @@
                   'count':nodes[key]
                 }];
             }
-         })
-         addNode(graphData);
-             console.log(graphData)
+        })
+        addNode(graphData);
+            console.log(graphData)
         });
       }
       
