@@ -299,7 +299,6 @@
           length: 5
         }
         
-        debugger
         /* This Event Represents the Origin of the User Flow Diagram. */
         
         graphData = {
@@ -310,8 +309,8 @@
         
         /* Test for Dynamic */
         var rootParams = {
-          from_date: params.from,
-          to_date: params.to,
+          from: params.from,
+          to: params.to,
           where: '(properties["featureid"] == "FontFilterActivated")'
         }
         
@@ -319,6 +318,7 @@
         var rootFeatureCount = MP.api.segment('featureInvoked',rootParams);
         
         $.when(rootFeatureCount).done(function(eventCount){
+            debugger
             graphData.count = eventCount.sum().values()[rootEvent];
             addNode(graphData);
         });
