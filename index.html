@@ -43,7 +43,7 @@
     </style>
   </head>
   <body class="mixpanel-platform-body" style="overflow-x:scroll;">
-      <div id="eventSelect" style="float: left;"></div>
+      <div id="featureSelect" style="float: left;"></div>
       <div id="dateSelect" style="float: right;"></div>
       <div style="clear: both;"></div>
       <button id="run" value="Run" style="display: none;">Run</button>
@@ -114,23 +114,16 @@
     }
     </script>
     <script>
-    var script = $('.jql').html()
+    var script = $('#jql').html()
     debugger
+    // redundant, jql is faster now
       MP.api.MAX_SIMULTANEOUS_QUERIES = 30
       var datesSelector = $('#dateSelect').MPDatepicker();
-      var rootEventSelect = $('#eventSelect').MPEventSelect();
+      var rootFeature = $('#featureSelect').MPPropertySelect('setEvent', 'featureinvoked');
       /* Global Event List */
-      var rootEvent;
-      var objs = {};
       var graphData = {}
       
-      var params = {
-        from: moment().subtract(30, 'days'),
-        to: moment(),
-        length: 14,
-        limit: 200,
-        interval: 90
-      }
+
   
       var width = 960;
       var height = 750;
@@ -193,6 +186,8 @@
                 addNode(graphData);
               } else {
                 val._children = true ;
+                debugger
+                // Need to get jql obj
                 nodeQuery(objs, val);
               }
           });
@@ -218,6 +213,7 @@
       /* Let the Funnel Queries Begin... */
   
       var nodeQuery = function(event_list, node){
+        // This needs mad cleaning, just make jql query
         /* Dict with top counts for each event */
         var nodes = {};
         var promises = []
@@ -282,38 +278,38 @@
       rootEventSelect.on('change', function(e){
         $('#run').show();
       })
+      
       $('#run').on('click', function(e){
-        var rootEvent = rootEventSelect.MPEventSelect('value')
+        var rootFeature = rootFeatureSelect.MPPropertySelect('value')
         var dates = datesSelector.MPDatepicker('value')
+        var params = {
+          from: dates.from,
+          to: dates.to,
+          length: 5
+        }
         
-        params.from = dates.from;
-        params.to = dates.to;
-        
+        debugger
         /* This Event Represents the Origin of the User Flow Diagram. */
         
         graphData = {
-          'name': rootEvent,
+          'name': rootFeature,
           'conversion': 100,
           'root': 100,
         };
         
-        var rootParams = {
-          from: params.from,
-          to: params.to,
-          type: 'unique',
-          interval: 32,
-        };
-        
         /* Top Event Queries */
-        var topEventsParams = {'limit':'30'};
-        var topEvents = MP.api.topEvents(topEventsParams);
+      
   
         /* Funnel Queries */
-        $.when(topEvents).done(function(events){
-            objs = events.values();
-        });
+        
+        /* Test for Dynamic */
+        var rootParams = {
+          from_date: params.from,
+          to_date: params.to,
+          where: '(properties["featureid"] == "FontFilterActivated")'
+        }
         /* Find the Root Event Count */
-        var rootEventCount = MP.api.segment(rootEvent,rootParams);
+        var rootEventCount = MP.api.segment('featureInvoked',rootParams);
         
         $.when(rootEventCount).done(function(eventCount){
             graphData.count = eventCount.sum().values()[rootEvent];
