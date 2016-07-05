@@ -118,12 +118,18 @@
       // redundant, jql is faster now
       MP.api.MAX_SIMULTANEOUS_QUERIES = 30;
       var datesSelector = $('#dateSelect').MPDatepicker();
+      var rootFeatureSelect = $('#featureSelect')
       
       // Need Prop Values not Prop Keys
       
-      var features = MP.api.propertyValues('featureinvoked', 'featureid').done(function(r){debugger})
-      var rootFeatureSelect = $('#featureSelect').MPPropertySelect();
-      rootFeatureSelect.MPPropertySelect('setEvent', 'featureinvoked');
+      var features = MP.api.propertyValues('featureinvoked', 'featureid', {limit: 1000}).done(function(r){
+        debugger
+        options = []
+        _.each(r.json, function(v,k){
+          options.push({value:v, label: v})
+        })
+        rootFeatureSelect.MPSelect(options);
+      })
       var rootFeature;
       /* Global Event List */
       var graphData = {};
@@ -285,7 +291,7 @@
       })
       
       $('#run').on('click', function(e){
-        var rootFeature = rootFeatureSelect.MPPropertySelect('value')
+        var rootFeature = rootFeatureSelect.val()
         var dates = datesSelector.MPDatepicker('value')
         var params = {
           from: dates.from,
