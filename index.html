@@ -240,12 +240,10 @@
         }
         steps.reverse();
         var JQLparams = _.extend({}, params, {features: steps})
-        debugger
         MP.api.jql(JQLscript, JQLparams).done(function(d) {
           var nodes = d[0]
           /* Add Data to Graph Data */
           var total = _.values(nodes).reduce(function(a , b){return a + b;});
-          debugger
           _.each(nodes, function(val, key){
             /*
               Build a node object with the conversion percentage and other meta data and add it to the children
