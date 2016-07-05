@@ -294,8 +294,8 @@
       $('#run').on('click', function(e){
         var rootFeature = rootFeatureSelect.val()
         dates = datesSelector.MPDatepicker('value')
-        params.from = dates.from
-        params.to = dates.to
+        params.from = new Date(dates.from).toISOString().split('T')[0]
+        params.to = new Date(dates.to).toISOString().split('T')[0]
         
         /* This Event Represents the Origin of the User Flow Diagram. */
         
