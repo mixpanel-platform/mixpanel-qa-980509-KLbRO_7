@@ -116,12 +116,13 @@
     <script>
     var script = $('#jql').html()
     // redundant, jql is faster now
-      MP.api.MAX_SIMULTANEOUS_QUERIES = 30
+      MP.api.MAX_SIMULTANEOUS_QUERIES = 30;
       var datesSelector = $('#dateSelect').MPDatepicker();
-      var rootFeature = $('#featureSelect').MPPropertySelect()
-      rootFeature.MPPropertySelect('setEvent', 'featureinvoked');
+      var rootFeatureSelect = $('#featureSelect').MPPropertySelect();
+      rootFeatureSelect.MPPropertySelect('setEvent', 'featureinvoked');
+      var rootFeature;
       /* Global Event List */
-      var graphData = {}
+      var graphData = {};
       
 
   
@@ -297,17 +298,13 @@
           'root': 100,
         };
         
-        /* Top Event Queries */
-      
-  
-        /* Funnel Queries */
-        
         /* Test for Dynamic */
         var rootParams = {
           from_date: params.from,
           to_date: params.to,
           where: '(properties["featureid"] == "FontFilterActivated")'
         }
+        
         /* Find the Root Event Count */
         var rootFeatureCount = MP.api.segment('featureInvoked',rootParams);
         
