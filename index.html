@@ -232,7 +232,6 @@
       var nodeQuery = function(node){
         /* Dict with top counts for each event */
         var nodes = {};
-        var parent = node;
         var steps = [node.name];
         while (parent){
           steps.push(_.clone(parent.name));
